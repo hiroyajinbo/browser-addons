@@ -5,7 +5,6 @@ const $ = (selector) => document.querySelector(selector);
 
 const tokenEl = $('#token');
 const intervalEl = $('#interval');
-const fetchLimitEl = $('#fetch-limit');
 const detailedNotificationsEl = $('#detailed-notifications');
 const markReadEnabledEl = $('#mark-read-enabled');
 const renderHtmlEnabledEl = $('#render-html-enabled');
@@ -93,7 +92,6 @@ async function loadOptions({ keepDirtyToken = false } = {}) {
     tokenDirty = false;
   }
   intervalEl.value = data.checkIntervalMinutes || 5;
-  fetchLimitEl.value = data.fetchLimit || 30;
   detailedNotificationsEl.checked = Boolean(data.showDetailedNotifications);
   markReadEnabledEl.checked = Boolean(data.markReadEnabled);
   renderHtmlEnabledEl.checked = data.renderHtmlEnabled !== false;
@@ -112,7 +110,6 @@ async function loadOptions({ keepDirtyToken = false } = {}) {
 function collectOptions({ includeToken = tokenDirty } = {}) {
   const options = {
     checkIntervalMinutes: intervalEl.value,
-    fetchLimit: fetchLimitEl.value,
     showDetailedNotifications: detailedNotificationsEl.checked,
     markReadEnabled: markReadEnabledEl.checked,
     renderHtmlEnabled: renderHtmlEnabledEl.checked,
@@ -143,7 +140,6 @@ async function savePreferences(section) {
   const data = await browser.runtime.sendMessage({ type: 'savePreferences', options: collectOptions({ includeToken: false }) });
 
   intervalEl.value = data.checkIntervalMinutes || intervalEl.value;
-  fetchLimitEl.value = data.fetchLimit || fetchLimitEl.value;
   enabledMailboxIds = new Set(data.enabledMailboxIds || [...enabledMailboxIds]);
   setSectionStatus(section, '保存しました。', 'ok');
 }
@@ -198,7 +194,6 @@ tokenEl.addEventListener('input', () => {
 
 for (const element of [
   intervalEl,
-  fetchLimitEl,
   detailedNotificationsEl,
   markReadEnabledEl,
   renderHtmlEnabledEl,

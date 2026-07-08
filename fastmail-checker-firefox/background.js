@@ -7,6 +7,7 @@ const JMAP_CORE = 'urn:ietf:params:jmap:core';
 const JMAP_MAIL = 'urn:ietf:params:jmap:mail';
 const CHECK_ALARM_NAME = 'fastmail-checker-check';
 const FASTMAIL_WEB_URL = 'https://app.fastmail.com/mail/';
+const EMAIL_FETCH_LIMIT = 30;
 const ICON_COLOR_PATHS = {
   48: 'icon-48.png',
   96: 'icon-96.png',
@@ -21,7 +22,7 @@ const ICON_GRAY_PATHS = {
 const DEFAULT_SETTINGS = {
   token: '',
   checkIntervalMinutes: 5,
-  fetchLimit: 30,
+  fetchLimit: EMAIL_FETCH_LIMIT,
   showDetailedNotifications: true,
   markReadEnabled: true,
   renderHtmlEnabled: true,
@@ -349,7 +350,7 @@ async function openUrl(url) {
 
 async function fetchUnreadEmails(settings, mailboxes, enabledMailboxIds) {
   const accountId = settings.accountId;
-  const fetchLimit = clampNumber(settings.fetchLimit, 5, 100, DEFAULT_SETTINGS.fetchLimit);
+  const fetchLimit = EMAIL_FETCH_LIMIT;
   const activeIds = enabledMailboxIds.filter(Boolean);
 
   if (activeIds.length === 0) {
@@ -577,7 +578,6 @@ async function getOptionsData() {
   return {
     token: settings.token,
     checkIntervalMinutes: settings.checkIntervalMinutes,
-    fetchLimit: settings.fetchLimit,
     showDetailedNotifications: settings.showDetailedNotifications,
     markReadEnabled: settings.markReadEnabled,
     renderHtmlEnabled: settings.renderHtmlEnabled,
@@ -642,7 +642,6 @@ browser.runtime.onMessage.addListener((message) => {
         const unreadCount = unreadCountForMailboxIds(current.mailboxes, enabledMailboxIds);
         await saveSettings({
           checkIntervalMinutes: clampNumber(options.checkIntervalMinutes, 1, 60, DEFAULT_SETTINGS.checkIntervalMinutes),
-          fetchLimit: clampNumber(options.fetchLimit, 5, 100, DEFAULT_SETTINGS.fetchLimit),
           showDetailedNotifications: Boolean(options.showDetailedNotifications),
           markReadEnabled: Boolean(options.markReadEnabled),
           renderHtmlEnabled: options.renderHtmlEnabled !== false,
@@ -663,7 +662,6 @@ browser.runtime.onMessage.addListener((message) => {
         const patch = {
           token: hasTokenOption ? String(options.token || '').trim() : current.token,
           checkIntervalMinutes: clampNumber(options.checkIntervalMinutes, 1, 60, DEFAULT_SETTINGS.checkIntervalMinutes),
-          fetchLimit: clampNumber(options.fetchLimit, 5, 100, DEFAULT_SETTINGS.fetchLimit),
           showDetailedNotifications: Boolean(options.showDetailedNotifications),
           markReadEnabled: Boolean(options.markReadEnabled),
           renderHtmlEnabled: options.renderHtmlEnabled !== false,

@@ -571,7 +571,6 @@ saveSetupTokenEl.addEventListener('click', async () => {
       options: {
         token,
         checkIntervalMinutes: 5,
-        fetchLimit: 30,
         showDetailedNotifications: true,
         markReadEnabled: true,
         renderHtmlEnabled: true,
