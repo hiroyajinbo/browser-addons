@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Fastmail Checker 設定</title>
+  <link rel="stylesheet" href="options.css">
+</head>
+<body>
+  <main>
+    <h1>Fastmail Checker 設定</h1>
+    <p class="lead">Fastmail APIトークン、通知対象フォルダ、通知内容、既読ボタンを設定します。</p>
+
+    <section class="panel">
+      <h2>接続</h2>
+      <label class="field">
+        <span>Fastmail API token</span>
+        <input id="token" type="password" autocomplete="off" spellcheck="false" placeholder="Fastmailで作成したAPIトークン">
+      </label>
+      <p class="hint">未読確認だけならread-only系の権限、既読化も使うならメール変更が可能なJMAP mail権限が必要です。送信権限は不要です。</p>
+      <div class="row">
+        <button id="save" type="button">保存</button>
+        <button id="refresh" type="button">フォルダ再取得</button>
+        <button id="check" type="button">接続テスト</button>
+      </div>
+      <p id="status" class="status">読み込み中...</p>
+    </section>
+
+    <section class="panel">
+      <h2>通知・表示</h2>
+      <label class="field inline">
+        <span>チェック間隔（分）</span>
+        <input id="interval" type="number" min="1" max="60" step="1">
+      </label>
+      <label class="field inline">
+        <span>ポップアップ取得件数</span>
+        <input id="fetch-limit" type="number" min="5" max="100" step="5">
+      </label>
+      <label class="check">
+        <input id="detailed-notifications" type="checkbox">
+        <span>通知に件名・差出人・プレビューを表示する</span>
+      </label>
+      <label class="check">
+        <input id="mark-read-enabled" type="checkbox">
+        <span>ポップアップに既読ボタンを表示する</span>
+      </label>
+    </section>
+
+    <section class="panel">
+      <div class="section-title">
+        <h2>通知対象フォルダ</h2>
+        <div class="row compact">
+          <button id="select-inbox" type="button">Inboxのみ</button>
+          <button id="select-unread" type="button">未読ありを選択</button>
+          <button id="select-all" type="button">すべて選択</button>
+          <button id="select-none" type="button">すべて解除</button>
+        </div>
+      </div>
+      <p class="hint">ここでONにしたフォルダだけ、未読数バッジ・通知・ポップアップ表示の対象になります。</p>
+      <div id="mailboxes" class="mailboxes"></div>
+    </section>
+  </main>
+
+  <script src="options.js"></script>
+</body>
+</html>

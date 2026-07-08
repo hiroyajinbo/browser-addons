@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Fastmail Masked Email</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <header>
+    <div>
+      <h1>Fastmail Masked Email</h1>
+      <p id="status">読み込み中...</p>
+    </div>
+    <button id="options" type="button" title="設定">⚙</button>
+  </header>
+
+  <section id="setup" class="panel hidden">
+    <p>Fastmail Masked Email用APIトークンが未設定、または診断未完了です。</p>
+    <button id="open-options-setup" type="button">設定を開く</button>
+  </section>
+
+  <section id="creator" class="panel">
+    <label class="field">
+      <span>用途名</span>
+      <input id="description" type="text" placeholder="例: example.com登録用">
+    </label>
+    <label class="field">
+      <span>サイトURL</span>
+      <input id="url" type="url" placeholder="https://example.com/">
+    </label>
+    <label class="field">
+      <span>ドメイン</span>
+      <input id="domain" type="text" placeholder="example.com">
+    </label>
+    <button id="create" type="button">Masked Emailを作成してコピー</button>
+  </section>
+
+  <section id="result" class="panel result hidden">
+    <h2>作成しました</h2>
+    <div id="created-email" class="created-email"></div>
+    <button id="copy-created" type="button">再コピー</button>
+  </section>
+
+  <section class="panel">
+    <h2>最近作成したアドレス</h2>
+    <div id="history" class="history"></div>
+  </section>
+
+  <script src="popup.js"></script>
+</body>
+</html>

@@ -1,0 +1,22 @@
+# OS / editor
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
+
+# Local packages / build outputs
+node_modules/
+dist/
+build/
+web-ext-artifacts/
+*.zip
+*.xpi
+
+# Large local/generated datasets
+rakuten-kobo-sale/楽天koboセール.txt
+
+# Local secrets
+.env
+.env.*
+*.local

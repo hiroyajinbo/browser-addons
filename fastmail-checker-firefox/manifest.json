@@ -1,0 +1,42 @@
+{
+  "manifest_version": 2,
+  "name": "Fastmail Checker",
+  "version": "1.0.0",
+  "description": "Fastmail unread checker with per-folder notifications, filters, and mark-as-read support.",
+  "permissions": [
+    "alarms",
+    "notifications",
+    "storage",
+    "tabs",
+    "https://api.fastmail.com/*"
+  ],
+  "background": {
+    "scripts": [
+      "background.js"
+    ]
+  },
+  "browser_action": {
+    "default_title": "Fastmail Checker",
+    "default_popup": "popup.html",
+    "default_icon": {
+      "48": "icon-48.png",
+      "96": "icon-96.png",
+      "128": "icon-128.png"
+    }
+  },
+  "options_ui": {
+    "page": "options.html",
+    "browser_style": true
+  },
+  "applications": {
+    "gecko": {
+      "id": "fastmail-checker-local@example.com",
+      "strict_min_version": "115.0"
+    }
+  },
+  "icons": {
+    "48": "icon-48.png",
+    "96": "icon-96.png",
+    "128": "icon-128.png"
+  }
+}

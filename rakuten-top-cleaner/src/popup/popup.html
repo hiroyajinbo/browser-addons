@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Rakuten Top Cleaner</title>
+    <link rel="stylesheet" href="popup.css">
+  </head>
+  <body>
+    <main class="rtc-popup">
+      <h1>Rakuten Top Cleaner</h1>
+
+      <label class="rtc-toggle">
+        <input type="checkbox" name="pointGridEnabled">
+        <span>ポイントアップ情報の一覧化</span>
+      </label>
+
+      <label class="rtc-toggle">
+        <input type="checkbox" name="shortcutBarEnabled">
+        <span>ショートカットバー表示</span>
+      </label>
+
+      <label class="rtc-toggle">
+        <input type="checkbox" name="couponPanelEnabled">
+        <span>クーポン枠の上部表示</span>
+      </label>
+
+      <label class="rtc-toggle">
+        <input type="checkbox" name="openShortcutsInNewTab">
+        <span>ショートカットを新しいタブで開く</span>
+      </label>
+
+      <p class="rtc-status" role="status" aria-live="polite"></p>
+    </main>
+
+    <script src="../shared/constants.js"></script>
+    <script src="../shared/storage.js"></script>
+    <script src="popup.js"></script>
+  </body>
+</html>

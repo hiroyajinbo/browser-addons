@@ -1,0 +1,41 @@
+{
+  "manifest_version": 2,
+  "name": "Fastmail Masked Email",
+  "version": "1.0.0",
+  "description": "FastmailのMasked Email作成を補助するローカルFirefox拡張です。",
+  "permissions": [
+    "clipboardWrite",
+    "storage",
+    "tabs",
+    "https://api.fastmail.com/*"
+  ],
+  "background": {
+    "scripts": [
+      "background.js"
+    ]
+  },
+  "browser_action": {
+    "default_title": "Fastmail Masked Email",
+    "default_popup": "popup.html",
+    "default_icon": {
+      "48": "assets/icon-48.png",
+      "96": "assets/icon-96.png",
+      "128": "assets/icon-128.png"
+    }
+  },
+  "options_ui": {
+    "page": "options.html",
+    "browser_style": true
+  },
+  "applications": {
+    "gecko": {
+      "id": "fastmail-masked-email-local@example.com",
+      "strict_min_version": "115.0"
+    }
+  },
+  "icons": {
+    "48": "assets/icon-48.png",
+    "96": "assets/icon-96.png",
+    "128": "assets/icon-128.png"
+  }
+}

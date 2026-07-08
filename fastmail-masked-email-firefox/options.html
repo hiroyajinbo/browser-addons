@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Fastmail Masked Email 設定</title>
+  <link rel="stylesheet" href="options.css">
+</head>
+<body>
+  <main>
+    <h1>Fastmail Masked Email 設定</h1>
+    <p class="lead">Fastmail APIトークンとMasked Email capabilityを診断します。</p>
+
+    <section class="panel">
+      <label class="field">
+        <span>Fastmail API token</span>
+        <input id="token" type="password" autocomplete="off" spellcheck="false" placeholder="マスクドメールのみONのAPIトークン">
+      </label>
+      <p class="hint">APIトークンはJMAPを選び、スコープは「マスクドメール」のみONにしてください。</p>
+      <div class="row">
+        <button id="save-token" type="button">保存して診断</button>
+        <button id="diagnose" type="button">再診断</button>
+      </div>
+      <p id="status" class="status" role="status" aria-live="polite"></p>
+    </section>
+
+    <section class="panel">
+      <h2>診断</h2>
+      <pre id="diagnostic"></pre>
+    </section>
+  </main>
+
+  <script src="options.js"></script>
+</body>
+</html>

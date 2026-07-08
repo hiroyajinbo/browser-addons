@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Fastmail Checker</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <header>
+    <div>
+      <h1>Fastmail Checker</h1>
+      <p id="status">読み込み中...</p>
+    </div>
+    <button id="options" type="button" title="設定">⚙</button>
+  </header>
+
+  <section id="setup" class="hidden panel">
+    <p>Fastmail APIトークンが未設定です。</p>
+    <button id="open-options-setup" type="button">設定を開く</button>
+  </section>
+
+  <section id="controls" class="panel">
+    <div class="row">
+      <button id="check-now" type="button">再チェック</button>
+      <button id="open-fastmail" type="button">Fastmailを開く</button>
+      <button id="mark-visible-read" type="button">表示分を既読</button>
+    </div>
+    <label class="field">
+      <span>表示フィルタ</span>
+      <input id="text-filter" type="search" placeholder="差出人・件名・宛先・フォルダで絞り込み">
+    </label>
+    <label class="field">
+      <span>フォルダ</span>
+      <select id="mailbox-filter">
+        <option value="all">すべて</option>
+      </select>
+    </label>
+  </section>
+
+  <main id="emails" aria-live="polite"></main>
+
+  <template id="email-template">
+    <article class="email-card">
+      <div class="email-top">
+        <div class="sender-avatar" aria-hidden="true"></div>
+        <div class="email-main">
+          <h2 class="subject"></h2>
+          <p class="meta"></p>
+        </div>
+        <button class="mark-read" type="button">既読</button>
+      </div>
+      <p class="preview"></p>
+      <div class="body hidden"></div>
+      <div class="chips"></div>
+    </article>
+  </template>
+
+  <script src="popup.js"></script>
+</body>
+</html>
