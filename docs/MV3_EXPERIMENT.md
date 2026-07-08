@@ -19,7 +19,8 @@
 - `popup.js` の構文チェック
 - `options.js` の構文チェック
 - `manifest.json` のJSON parse
-- `browserAction` などManifest V2固有参照が残っていないこと
+- manifest上の `browser_action` などManifest V2固有キーが残っていないこと
+- `browserAction` は旧API互換フォールバックとしてのみ残していること
 - Firefoxでの実読み込み
 - Firefoxのオプションタブ表示
 - Firefoxでの通知対象フォルダ別バッジ表示

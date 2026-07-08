@@ -74,4 +74,5 @@ background.js
 popup.html / popup.js / popup.css
 options.html / options.js / options.css
 icon-48.png / icon-96.png
+icon-gray-48.png / icon-gray-96.png
 ```

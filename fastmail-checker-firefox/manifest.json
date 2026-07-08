@@ -6,8 +6,7 @@
   "permissions": [
     "alarms",
     "notifications",
-    "storage",
-    "tabs"
+    "storage"
   ],
   "host_permissions": [
     "https://api.fastmail.com/*"
