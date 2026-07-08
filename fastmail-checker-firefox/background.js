@@ -27,6 +27,7 @@ const DEFAULT_SETTINGS = {
   renderHtmlEnabled: true,
   loadExternalImages: false,
   enabledMailboxIds: [],
+  hasConfiguredMailboxSelection: false,
   knownUnreadEmailIds: [],
   initialized: false,
   accountId: '',
@@ -187,7 +188,7 @@ async function refreshMailboxes() {
   const validIds = new Set(mailboxes.map((mailbox) => mailbox.id));
   enabledMailboxIds = enabledMailboxIds.filter((id) => validIds.has(id));
 
-  if (enabledMailboxIds.length === 0) {
+  if (enabledMailboxIds.length === 0 && !settings.hasConfiguredMailboxSelection) {
     const inboxes = mailboxes.filter((mailbox) => mailbox.role === 'inbox');
     enabledMailboxIds = (inboxes.length ? inboxes : mailboxes.slice(0, 1)).map((mailbox) => mailbox.id);
   }
@@ -218,15 +219,11 @@ function emailMatchesEnabledMailboxes(email, enabledMailboxIds) {
   return ids.some((id) => enabledMailboxIds.includes(id));
 }
 
-function mailboxIdsWithUnread(mailboxes) {
+function unreadCountForMailboxIds(mailboxes, mailboxIds) {
+  const enabledSet = new Set(mailboxIds || []);
   return (mailboxes || [])
-    .filter((mailbox) => Number(mailbox.unreadEmails || 0) > 0)
-    .map((mailbox) => mailbox.id)
-    .filter(Boolean);
-}
-
-function unionIds(...idLists) {
-  return [...new Set(idLists.flat().filter(Boolean))];
+    .filter((mailbox) => enabledSet.has(mailbox.id))
+    .reduce((sum, mailbox) => sum + Number(mailbox.unreadEmails || 0), 0);
 }
 
 function displayAddress(address) {
@@ -479,15 +476,10 @@ async function checkNow({ manual = false, notify = true } = {}) {
     settings = await getSettings();
 
     const enabledMailboxIds = settings.enabledMailboxIds || mailboxData.enabledMailboxIds || [];
-    const displayMailboxIds = unionIds(enabledMailboxIds, mailboxIdsWithUnread(mailboxData.mailboxes));
     const enabledResult = await fetchUnreadEmails(settings, mailboxData.mailboxes, enabledMailboxIds);
-    const displayResult = displayMailboxIds.length === enabledMailboxIds.length
-      ? enabledResult
-      : await fetchUnreadEmails(settings, mailboxData.mailboxes, displayMailboxIds);
     const emails = enabledResult.emails;
     const unreadCount = enabledResult.unreadCount;
-    const displayEmails = displayResult.emails;
-    const badgeCount = displayResult.unreadCount;
+    const badgeCount = unreadCount;
     const previousKnown = new Set(settings.knownUnreadEmailIds || []);
     const newEmails = emails.filter((email) => !previousKnown.has(email.id));
     const currentKnown = emails.map((email) => email.id).slice(0, 1000);
@@ -503,11 +495,11 @@ async function checkNow({ manual = false, notify = true } = {}) {
       lastCheckAt: Date.now(),
       lastError: '',
       lastUnreadCount: unreadCount,
-      lastEmails: displayEmails
+      lastEmails: emails
     });
 
     await updateBadge(badgeCount);
-    return { ok: true, manual, unreadCount, emails: displayEmails, badgeCount, newCount: shouldNotify ? newEmails.length : 0 };
+    return { ok: true, manual, unreadCount, emails, badgeCount, newCount: shouldNotify ? newEmails.length : 0 };
   } catch (error) {
     const message = error?.message || String(error);
     await saveSettings({ lastError: message, lastCheckAt: Date.now() });
@@ -630,6 +622,9 @@ browser.runtime.onMessage.addListener((message) => {
       return (async () => {
         const options = message.options || {};
         const current = await getSettings();
+        const enabledMailboxIds = Array.isArray(options.enabledMailboxIds) ? options.enabledMailboxIds : current.enabledMailboxIds;
+        const unreadCount = unreadCountForMailboxIds(current.mailboxes, enabledMailboxIds);
+        const lastEmails = (current.lastEmails || []).filter((email) => emailMatchesEnabledMailboxes(email, enabledMailboxIds));
         await saveSettings({
           checkIntervalMinutes: clampNumber(options.checkIntervalMinutes, 1, 60, DEFAULT_SETTINGS.checkIntervalMinutes),
           fetchLimit: clampNumber(options.fetchLimit, 5, 100, DEFAULT_SETTINGS.fetchLimit),
@@ -637,9 +632,13 @@ browser.runtime.onMessage.addListener((message) => {
           markReadEnabled: Boolean(options.markReadEnabled),
           renderHtmlEnabled: options.renderHtmlEnabled !== false,
           loadExternalImages: Boolean(options.loadExternalImages),
-          enabledMailboxIds: Array.isArray(options.enabledMailboxIds) ? options.enabledMailboxIds : current.enabledMailboxIds
+          enabledMailboxIds,
+          hasConfiguredMailboxSelection: true,
+          lastUnreadCount: unreadCount,
+          lastEmails
         });
         await configureAlarm();
+        await updateBadge(unreadCount);
         return getOptionsData();
       })();
     case 'saveOptions':
@@ -654,7 +653,8 @@ browser.runtime.onMessage.addListener((message) => {
           markReadEnabled: Boolean(options.markReadEnabled),
           renderHtmlEnabled: options.renderHtmlEnabled !== false,
           loadExternalImages: Boolean(options.loadExternalImages),
-          enabledMailboxIds: Array.isArray(options.enabledMailboxIds) ? options.enabledMailboxIds : current.enabledMailboxIds
+          enabledMailboxIds: Array.isArray(options.enabledMailboxIds) ? options.enabledMailboxIds : current.enabledMailboxIds,
+          hasConfiguredMailboxSelection: current.mailboxes?.length > 0 ? true : current.hasConfiguredMailboxSelection
         };
 
         if (patch.token !== current.token) {
@@ -663,6 +663,7 @@ browser.runtime.onMessage.addListener((message) => {
           patch.mailboxes = [];
           patch.knownUnreadEmailIds = [];
           patch.initialized = false;
+          patch.hasConfiguredMailboxSelection = false;
           patch.lastEmails = [];
           patch.lastUnreadCount = 0;
         }
