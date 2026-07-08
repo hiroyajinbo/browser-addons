@@ -16,3 +16,12 @@
 ## Notes
 
 このリポジトリは個人用途から始まった実験的なプロジェクトです。公開・配布に向けたドキュメント、プライバシーポリシー、セキュリティ方針は今後整理していきます。
+
+## Documents
+
+- [Privacy Policy](PRIVACY.md)
+- [Security Policy](SECURITY.md)
+- [Support Policy](SUPPORT.md)
+- [Architecture](docs/ARCHITECTURE.md)
+- [Release Checklist](docs/RELEASE_CHECKLIST.md)
+- [Threat Model](docs/THREAT_MODEL.md)
