@@ -39,7 +39,7 @@ function renderMailboxes() {
   if (mailboxes.length === 0) {
     const empty = document.createElement('div');
     empty.className = 'empty';
-    empty.textContent = 'フォルダ未取得です。APIトークンを保存して「フォルダ再取得」を押してください。';
+    empty.textContent = 'フォルダ未取得です。API tokenを保存して「フォルダ再取得」を押してください。';
     mailboxesEl.appendChild(empty);
     return;
   }

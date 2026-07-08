@@ -8,18 +8,22 @@
 </head>
 <body>
   <main>
-    <h1>Fastmail Checker 設定</h1>
-    <p class="lead">Fastmail APIトークン、通知対象フォルダ、通知内容、既読ボタンを設定します。</p>
+    <header class="hero">
+      <div>
+        <h1>Fastmail Checker 設定</h1>
+        <p class="lead">API token、通知、表示、対象フォルダを設定します。</p>
+      </div>
+    </header>
 
     <section class="panel">
       <h2>接続</h2>
       <label class="field">
         <span>Fastmail API token</span>
-        <input id="token" type="password" autocomplete="off" spellcheck="false" placeholder="Fastmailで作成したAPIトークン">
+        <input id="token" type="password" autocomplete="off" spellcheck="false" placeholder="Fastmailで作成したAPI token">
       </label>
-      <p class="hint">未読確認だけならread-only系の権限、既読化も使うならメール変更が可能なJMAP mail権限が必要です。送信権限は不要です。</p>
+      <p class="hint">未読確認にはMailへのアクセス権限を持つAPI tokenが必要です。既読化を使う場合はメール変更が可能な権限も必要です。信頼権限は不要です。</p>
       <div class="row">
-        <button id="save" type="button">保存</button>
+        <button id="save" type="button" class="primary">保存</button>
         <button id="refresh" type="button">フォルダ再取得</button>
         <button id="check" type="button">接続テスト</button>
       </div>
@@ -33,7 +37,7 @@
         <input id="interval" type="number" min="1" max="60" step="1">
       </label>
       <label class="field inline">
-        <span>ポップアップ取得件数</span>
+        <span>取得件数</span>
         <input id="fetch-limit" type="number" min="5" max="100" step="5">
       </label>
       <label class="check">
@@ -65,7 +69,7 @@
           <button id="select-none" type="button">すべて解除</button>
         </div>
       </div>
-      <p class="hint">ここでONにしたフォルダだけ、未読数バッジ・通知・ポップアップ表示の対象になります。</p>
+      <p class="hint">ONにしたフォルダが、未読数バッジ、通知、ポップアップ表示の対象になります。</p>
       <div id="mailboxes" class="mailboxes"></div>
     </section>
   </main>
