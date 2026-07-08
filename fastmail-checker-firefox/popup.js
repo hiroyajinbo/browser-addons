@@ -351,16 +351,20 @@ function sanitizeEmailHtml(html, { loadExternalImages = false } = {}) {
 
   improvePlainHtmlText(doc.body, doc);
 
-  return doc.body.innerHTML.trim();
+  const fragment = document.createDocumentFragment();
+  while (doc.body.firstChild) {
+    fragment.appendChild(doc.body.firstChild);
+  }
+  return fragment;
 }
 
 function renderEmailBody(bodyEl, message) {
-  const html = state.renderHtmlEnabled && message?.html
+  const htmlFragment = state.renderHtmlEnabled && message?.html
     ? sanitizeEmailHtml(message.html, { loadExternalImages: state.loadExternalImages })
-    : '';
-  if (html) {
+    : null;
+  if (htmlFragment?.hasChildNodes()) {
     bodyEl.classList.add('html-body');
-    bodyEl.innerHTML = html;
+    bodyEl.replaceChildren(htmlFragment);
     return;
   }
   setBodyText(bodyEl, message?.body || '(No readable message body.)');

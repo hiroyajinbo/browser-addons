@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Fastmail Unread Notifier",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Unofficial Fastmail unread notifier with per-folder notifications, filters, and mark-as-read support.",
   "homepage_url": "https://github.com/hiroyajinbo/browser-addons",
   "permissions": [
@@ -33,7 +33,7 @@
   "browser_specific_settings": {
     "gecko": {
       "id": "fastmail-unread-notifier@hiroyajinbo.github.io",
-      "strict_min_version": "140.0",
+      "strict_min_version": "142.0",
       "data_collection_permissions": {
         "required": [
           "authenticationInfo",
