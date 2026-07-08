@@ -5,7 +5,7 @@
 ## 変更内容
 
 - `manifest_version` を `3` に変更
-- `background.scripts` を `background.service_worker` に変更
+- Firefoxの現在の読み込み環境に合わせて `background.scripts` を維持
 - `browser_action` を `action` に変更
 - `https://api.fastmail.com/*` を `host_permissions` に分離
 - Firefox向け設定を `applications` から `browser_specific_settings` に変更
@@ -24,10 +24,10 @@
 
 - Firefoxでの実読み込み
 - Chrome/Edgeでの実読み込み
-- service worker停止後の定期チェック復帰
+- Chrome/Edge向けに `background.service_worker` を使う別manifestまたはビルド分岐
 - 通知クリック、バッジ、アイコン切り替え
 - API token保存後の初回チェック
 
 ## 注意
 
-このブランチは試作用です。Firefox MV2版を置き換える前に、実ブラウザでの動作確認とChrome/Edge差分の確認が必要です。
+このブランチは試作用です。Firefoxでは `background.service_worker` が無効な環境があるため、現時点ではFirefox向けMV3として `background.scripts` を使います。Chrome/Edge向けに配布する場合は `background.service_worker` を使うmanifest差分かビルド分岐が必要です。

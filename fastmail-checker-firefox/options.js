@@ -145,6 +145,7 @@ function setMailboxSelection(predicate) {
 }
 
 $('#save').addEventListener('click', () => saveOptions().catch((error) => setStatus(error.message || String(error), 'error')));
+$('#save-display').addEventListener('click', () => saveOptions().catch((error) => setStatus(error.message || String(error), 'error')));
 $('#refresh').addEventListener('click', () => refreshMailboxes().catch((error) => setStatus(error.message || String(error), 'error')));
 $('#check').addEventListener('click', () => testConnection().catch((error) => setStatus(error.message || String(error), 'error')));
 $('#select-inbox').addEventListener('click', () => setMailboxSelection((mailbox) => mailbox.role === 'inbox'));
