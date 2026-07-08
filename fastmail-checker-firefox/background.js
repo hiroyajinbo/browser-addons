@@ -659,8 +659,9 @@ browser.runtime.onMessage.addListener((message) => {
       return (async () => {
         const options = message.options || {};
         const current = await getSettings();
+        const hasTokenOption = Object.prototype.hasOwnProperty.call(options, 'token');
         const patch = {
-          token: String(options.token || '').trim(),
+          token: hasTokenOption ? String(options.token || '').trim() : current.token,
           checkIntervalMinutes: clampNumber(options.checkIntervalMinutes, 1, 60, DEFAULT_SETTINGS.checkIntervalMinutes),
           fetchLimit: clampNumber(options.fetchLimit, 5, 100, DEFAULT_SETTINGS.fetchLimit),
           showDetailedNotifications: Boolean(options.showDetailedNotifications),

@@ -17,6 +17,8 @@ const foldersStatusEl = $('#folders-status');
 
 let mailboxes = [];
 let enabledMailboxIds = new Set();
+let tokenDirty = false;
+let externalReloadTimer = 0;
 const autoSaveTimers = new Map();
 
 function setStatus(text, kind = '') {
@@ -84,9 +86,12 @@ function renderMailboxes() {
   }
 }
 
-async function loadOptions() {
+async function loadOptions({ keepDirtyToken = false } = {}) {
   const data = await browser.runtime.sendMessage({ type: 'getOptionsData' });
-  tokenEl.value = data.token || '';
+  if (!keepDirtyToken || !tokenDirty) {
+    tokenEl.value = data.token || '';
+    tokenDirty = false;
+  }
   intervalEl.value = data.checkIntervalMinutes || 5;
   fetchLimitEl.value = data.fetchLimit || 30;
   detailedNotificationsEl.checked = Boolean(data.showDetailedNotifications);
@@ -104,9 +109,8 @@ async function loadOptions() {
   }
 }
 
-function collectOptions() {
-  return {
-    token: tokenEl.value,
+function collectOptions({ includeToken = tokenDirty } = {}) {
+  const options = {
     checkIntervalMinutes: intervalEl.value,
     fetchLimit: fetchLimitEl.value,
     showDetailedNotifications: detailedNotificationsEl.checked,
@@ -115,12 +119,19 @@ function collectOptions() {
     loadExternalImages: loadExternalImagesEl.checked,
     enabledMailboxIds: [...enabledMailboxIds]
   };
+
+  if (includeToken) {
+    options.token = tokenEl.value;
+  }
+
+  return options;
 }
 
 async function saveOptions() {
   setStatus('保存中...');
   const data = await browser.runtime.sendMessage({ type: 'saveOptions', options: collectOptions() });
   tokenEl.value = data.token || tokenEl.value;
+  tokenDirty = false;
   mailboxes = data.mailboxes || [];
   enabledMailboxIds = new Set(data.enabledMailboxIds || []);
   renderMailboxes();
@@ -129,7 +140,7 @@ async function saveOptions() {
 
 async function savePreferences(section) {
   setSectionStatus(section, '保存中...');
-  const data = await browser.runtime.sendMessage({ type: 'savePreferences', options: collectOptions() });
+  const data = await browser.runtime.sendMessage({ type: 'savePreferences', options: collectOptions({ includeToken: false }) });
 
   intervalEl.value = data.checkIntervalMinutes || intervalEl.value;
   fetchLimitEl.value = data.fetchLimit || fetchLimitEl.value;
@@ -181,6 +192,10 @@ $('#select-unread').addEventListener('click', () => setMailboxSelection((mailbox
 $('#select-all').addEventListener('click', () => setMailboxSelection(() => true));
 $('#select-none').addEventListener('click', () => setMailboxSelection(() => false));
 
+tokenEl.addEventListener('input', () => {
+  tokenDirty = true;
+});
+
 for (const element of [
   intervalEl,
   fetchLimitEl,
@@ -193,3 +208,14 @@ for (const element of [
 }
 
 loadOptions().catch((error) => setStatus(error.message || String(error), 'error'));
+
+browser.storage.onChanged.addListener((changes, areaName) => {
+  if (areaName !== 'local') return;
+  const watchedKeys = ['token', 'mailboxes', 'enabledMailboxIds', 'lastCheckAt', 'lastError'];
+  if (!watchedKeys.some((key) => Object.prototype.hasOwnProperty.call(changes, key))) return;
+
+  clearTimeout(externalReloadTimer);
+  externalReloadTimer = setTimeout(() => {
+    loadOptions({ keepDirtyToken: true }).catch((error) => setStatus(error.message || String(error), 'error'));
+  }, 150);
+});
