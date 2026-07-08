@@ -73,6 +73,6 @@ manifest.json
 background.js
 popup.html / popup.js / popup.css
 options.html / options.js / options.css
-icon-48.png / icon-96.png
-icon-gray-48.png / icon-gray-96.png
+icon-48.png / icon-96.png / icon-128.png
+icon-gray-48.png / icon-gray-96.png / icon-gray-128.png
 ```

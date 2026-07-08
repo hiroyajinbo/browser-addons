@@ -31,7 +31,7 @@
   },
   "browser_specific_settings": {
     "gecko": {
-      "id": "fastmail-checker-local@example.com",
+      "id": "fastmail-checker@hiroyajinbo.github.io",
       "strict_min_version": "109.0"
     }
   },
