@@ -12,13 +12,22 @@ const renderHtmlEnabledEl = $('#render-html-enabled');
 const loadExternalImagesEl = $('#load-external-images');
 const mailboxesEl = $('#mailboxes');
 const statusEl = $('#status');
+const displayStatusEl = $('#display-status');
+const foldersStatusEl = $('#folders-status');
 
 let mailboxes = [];
 let enabledMailboxIds = new Set();
+const autoSaveTimers = new Map();
 
 function setStatus(text, kind = '') {
   statusEl.textContent = text;
   statusEl.className = `status ${kind}`.trim();
+}
+
+function setSectionStatus(section, text, kind = '') {
+  const target = section === 'folders' ? foldersStatusEl : displayStatusEl;
+  target.textContent = text;
+  target.className = `section-status ${kind}`.trim();
 }
 
 function formatDate(value) {
@@ -57,6 +66,7 @@ function renderMailboxes() {
     checkbox.addEventListener('change', () => {
       if (checkbox.checked) enabledMailboxIds.add(mailbox.id);
       else enabledMailboxIds.delete(mailbox.id);
+      scheduleAutoSave('folders');
     });
 
     const body = document.createElement('span');
@@ -117,6 +127,24 @@ async function saveOptions() {
   setStatus('保存しました。', 'ok');
 }
 
+async function savePreferences(section) {
+  setSectionStatus(section, '保存中...');
+  const data = await browser.runtime.sendMessage({ type: 'savePreferences', options: collectOptions() });
+
+  intervalEl.value = data.checkIntervalMinutes || intervalEl.value;
+  fetchLimitEl.value = data.fetchLimit || fetchLimitEl.value;
+  enabledMailboxIds = new Set(data.enabledMailboxIds || [...enabledMailboxIds]);
+  setSectionStatus(section, '保存しました。', 'ok');
+}
+
+function scheduleAutoSave(section) {
+  clearTimeout(autoSaveTimers.get(section));
+  setSectionStatus(section, '保存待ち...');
+  autoSaveTimers.set(section, setTimeout(() => {
+    savePreferences(section).catch((error) => setSectionStatus(section, error.message || String(error), 'error'));
+  }, 500));
+}
+
 async function refreshMailboxes() {
   setStatus('フォルダ取得中...');
   await browser.runtime.sendMessage({ type: 'saveOptions', options: collectOptions() });
@@ -142,15 +170,26 @@ async function testConnection() {
 function setMailboxSelection(predicate) {
   enabledMailboxIds = new Set(mailboxes.filter(predicate).map((mailbox) => mailbox.id));
   renderMailboxes();
+  scheduleAutoSave('folders');
 }
 
 $('#save').addEventListener('click', () => saveOptions().catch((error) => setStatus(error.message || String(error), 'error')));
-$('#save-display').addEventListener('click', () => saveOptions().catch((error) => setStatus(error.message || String(error), 'error')));
 $('#refresh').addEventListener('click', () => refreshMailboxes().catch((error) => setStatus(error.message || String(error), 'error')));
 $('#check').addEventListener('click', () => testConnection().catch((error) => setStatus(error.message || String(error), 'error')));
 $('#select-inbox').addEventListener('click', () => setMailboxSelection((mailbox) => mailbox.role === 'inbox'));
 $('#select-unread').addEventListener('click', () => setMailboxSelection((mailbox) => Number(mailbox.unreadEmails || 0) > 0));
 $('#select-all').addEventListener('click', () => setMailboxSelection(() => true));
 $('#select-none').addEventListener('click', () => setMailboxSelection(() => false));
+
+for (const element of [
+  intervalEl,
+  fetchLimitEl,
+  detailedNotificationsEl,
+  markReadEnabledEl,
+  renderHtmlEnabledEl,
+  loadExternalImagesEl
+]) {
+  element.addEventListener('change', () => scheduleAutoSave('display'));
+}
 
 loadOptions().catch((error) => setStatus(error.message || String(error), 'error'));

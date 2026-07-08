@@ -184,6 +184,15 @@ button.primary {
 .status.error { color: var(--danger); }
 .status.ok { color: var(--accent); }
 
+.section-status {
+  margin: 8px 0 0;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.section-status.error { color: var(--danger); }
+.section-status.ok { color: var(--accent); }
+
 .section-title {
   display: flex;
   align-items: flex-start;

@@ -626,6 +626,22 @@ browser.runtime.onMessage.addListener((message) => {
       return getPopupState();
     case 'getOptionsData':
       return getOptionsData();
+    case 'savePreferences':
+      return (async () => {
+        const options = message.options || {};
+        const current = await getSettings();
+        await saveSettings({
+          checkIntervalMinutes: clampNumber(options.checkIntervalMinutes, 1, 60, DEFAULT_SETTINGS.checkIntervalMinutes),
+          fetchLimit: clampNumber(options.fetchLimit, 5, 100, DEFAULT_SETTINGS.fetchLimit),
+          showDetailedNotifications: Boolean(options.showDetailedNotifications),
+          markReadEnabled: Boolean(options.markReadEnabled),
+          renderHtmlEnabled: options.renderHtmlEnabled !== false,
+          loadExternalImages: Boolean(options.loadExternalImages),
+          enabledMailboxIds: Array.isArray(options.enabledMailboxIds) ? options.enabledMailboxIds : current.enabledMailboxIds
+        });
+        await configureAlarm();
+        return getOptionsData();
+      })();
     case 'saveOptions':
       return (async () => {
         const options = message.options || {};
