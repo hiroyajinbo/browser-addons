@@ -226,6 +226,17 @@ function unreadCountForMailboxIds(mailboxes, mailboxIds) {
     .reduce((sum, mailbox) => sum + Number(mailbox.unreadEmails || 0), 0);
 }
 
+function mailboxIdsWithUnread(mailboxes) {
+  return (mailboxes || [])
+    .filter((mailbox) => Number(mailbox.unreadEmails || 0) > 0)
+    .map((mailbox) => mailbox.id)
+    .filter(Boolean);
+}
+
+function unionIds(...idLists) {
+  return [...new Set(idLists.flat().filter(Boolean))];
+}
+
 function displayAddress(address) {
   if (!address) return '';
   return address.name || address.email || '';
@@ -476,8 +487,13 @@ async function checkNow({ manual = false, notify = true } = {}) {
     settings = await getSettings();
 
     const enabledMailboxIds = settings.enabledMailboxIds || mailboxData.enabledMailboxIds || [];
+    const displayMailboxIds = unionIds(enabledMailboxIds, mailboxIdsWithUnread(mailboxData.mailboxes));
     const enabledResult = await fetchUnreadEmails(settings, mailboxData.mailboxes, enabledMailboxIds);
+    const displayResult = displayMailboxIds.length === enabledMailboxIds.length
+      ? enabledResult
+      : await fetchUnreadEmails(settings, mailboxData.mailboxes, displayMailboxIds);
     const emails = enabledResult.emails;
+    const displayEmails = displayResult.emails;
     const unreadCount = enabledResult.unreadCount;
     const badgeCount = unreadCount;
     const previousKnown = new Set(settings.knownUnreadEmailIds || []);
@@ -495,11 +511,11 @@ async function checkNow({ manual = false, notify = true } = {}) {
       lastCheckAt: Date.now(),
       lastError: '',
       lastUnreadCount: unreadCount,
-      lastEmails: emails
+      lastEmails: displayEmails
     });
 
     await updateBadge(badgeCount);
-    return { ok: true, manual, unreadCount, emails, badgeCount, newCount: shouldNotify ? newEmails.length : 0 };
+    return { ok: true, manual, unreadCount, emails: displayEmails, badgeCount, newCount: shouldNotify ? newEmails.length : 0 };
   } catch (error) {
     const message = error?.message || String(error);
     await saveSettings({ lastError: message, lastCheckAt: Date.now() });
@@ -624,7 +640,6 @@ browser.runtime.onMessage.addListener((message) => {
         const current = await getSettings();
         const enabledMailboxIds = Array.isArray(options.enabledMailboxIds) ? options.enabledMailboxIds : current.enabledMailboxIds;
         const unreadCount = unreadCountForMailboxIds(current.mailboxes, enabledMailboxIds);
-        const lastEmails = (current.lastEmails || []).filter((email) => emailMatchesEnabledMailboxes(email, enabledMailboxIds));
         await saveSettings({
           checkIntervalMinutes: clampNumber(options.checkIntervalMinutes, 1, 60, DEFAULT_SETTINGS.checkIntervalMinutes),
           fetchLimit: clampNumber(options.fetchLimit, 5, 100, DEFAULT_SETTINGS.fetchLimit),
@@ -634,8 +649,7 @@ browser.runtime.onMessage.addListener((message) => {
           loadExternalImages: Boolean(options.loadExternalImages),
           enabledMailboxIds,
           hasConfiguredMailboxSelection: true,
-          lastUnreadCount: unreadCount,
-          lastEmails
+          lastUnreadCount: unreadCount
         });
         await configureAlarm();
         await updateBadge(unreadCount);
