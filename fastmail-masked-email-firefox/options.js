@@ -32,9 +32,9 @@ async function loadState() {
   renderDiagnostic(state);
 
   if (!state.hasToken) {
-    setStatus('APIトークンを保存してください');
+    setStatus('API tokenを保存してください');
   } else if (state.maskedCapability) {
-    setStatus(`Masked Email capability検出: ${state.maskedCapability}`);
+    setStatus(`Masked Email capabilityを検出しました: ${state.maskedCapability}`, 'ok');
   } else if (state.lastError) {
     setStatus(`エラー: ${state.lastError}`, 'error');
   } else {

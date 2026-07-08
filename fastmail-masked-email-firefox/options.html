@@ -8,24 +8,30 @@
 </head>
 <body>
   <main>
-    <h1>Fastmail Masked Email 設定</h1>
-    <p class="lead">Fastmail APIトークンとMasked Email capabilityを診断します。</p>
+    <header class="hero">
+      <div>
+        <h1>Fastmail Masked Email 設定</h1>
+        <p class="lead">API tokenとMasked Email capabilityを確認します。</p>
+      </div>
+    </header>
 
     <section class="panel">
+      <h2>接続</h2>
       <label class="field">
         <span>Fastmail API token</span>
-        <input id="token" type="password" autocomplete="off" spellcheck="false" placeholder="マスクドメールのみONのAPIトークン">
+        <input id="token" type="password" autocomplete="off" spellcheck="false" placeholder="Masked Email権限を持つAPI token">
       </label>
-      <p class="hint">APIトークンはJMAPを選び、スコープは「マスクドメール」のみONにしてください。</p>
+      <p class="hint">FastmailでJMAP API tokenを作成し、Masked Emailの権限を有効にしてください。必要以上の権限は付けないことを推奨します。</p>
       <div class="row">
-        <button id="save-token" type="button">保存して診断</button>
+        <button id="save-token" type="button" class="primary">保存して診断</button>
         <button id="diagnose" type="button">再診断</button>
       </div>
       <p id="status" class="status" role="status" aria-live="polite"></p>
     </section>
 
     <section class="panel">
-      <h2>診断</h2>
+      <h2>診断情報</h2>
+      <p class="hint">Masked Email capabilityが検出できない場合は、API tokenの権限を確認してください。</p>
       <pre id="diagnostic"></pre>
     </section>
   </main>

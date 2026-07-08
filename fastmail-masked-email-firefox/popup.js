@@ -95,7 +95,7 @@ async function loadState() {
   createEl.disabled = !isReady;
 
   if (!state.hasToken) {
-    setStatus('APIトークンを設定してください');
+    setStatus('API tokenを設定してください');
   } else if (isReady) {
     setStatus('作成できます');
   } else if (state.lastError) {
