@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "Fastmail Checker",
-  "version": "1.0.1",
-  "description": "Unofficial Fastmail unread checker with per-folder notifications, filters, and mark-as-read support.",
+  "name": "Fastmail Unread Notifier",
+  "version": "1.0.2",
+  "description": "Unofficial Fastmail unread notifier with per-folder notifications, filters, and mark-as-read support.",
   "homepage_url": "https://github.com/hiroyajinbo/browser-addons",
   "permissions": [
     "alarms",
@@ -18,7 +18,7 @@
     ]
   },
   "action": {
-    "default_title": "Fastmail Checker",
+    "default_title": "Fastmail Unread Notifier",
     "default_popup": "popup.html",
     "default_icon": {
       "48": "icon-48.png",
@@ -32,7 +32,7 @@
   },
   "browser_specific_settings": {
     "gecko": {
-      "id": "fastmail-checker@hiroyajinbo.github.io",
+      "id": "fastmail-unread-notifier@hiroyajinbo.github.io",
       "strict_min_version": "140.0",
       "data_collection_permissions": {
         "required": [

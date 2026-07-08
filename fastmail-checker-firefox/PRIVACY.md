@@ -1,6 +1,6 @@
-# Privacy Policy for Fastmail Checker
+# Privacy Policy for Fastmail Unread Notifier
 
-Fastmail Checker is an unofficial browser extension for checking unread mail through the Fastmail API.
+Fastmail Unread Notifier is an unofficial browser extension for checking unread mail through the Fastmail API.
 
 ## Data Stored Locally
 
@@ -44,4 +44,4 @@ Removing the extension from Firefox removes its local extension storage. The API
 
 ## Affiliation
 
-Fastmail Checker is not affiliated with, endorsed by, or supported by Fastmail.
+Fastmail Unread Notifier is not affiliated with, endorsed by, or supported by Fastmail.

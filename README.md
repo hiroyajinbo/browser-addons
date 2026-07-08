@@ -8,7 +8,7 @@
 
 ## Extensions
 
-- `fastmail-checker-firefox`: Fastmailの未読メール確認を補助するFirefox拡張機能
+- `fastmail-checker-firefox`: Fastmail Unread Notifier。Fastmailの未読メール確認を補助するFirefox拡張機能
 - `fastmail-masked-email-firefox`: Fastmail Masked Emailの作成を補助するFirefox拡張機能
 - `rakuten-kobo-sale`: 楽天Koboセール確認向けの補助拡張機能
 - `rakuten-top-cleaner`: 楽天トップページの表示調整用拡張機能

@@ -449,7 +449,7 @@ async function notifyEmails(emails, settings) {
     const title = detailed ? email.subject : 'Fastmail: new unread email';
     const body = detailed
       ? `${email.from}\n${email.mailboxPath}${email.preview ? `\n${email.preview}` : ''}`
-      : 'Open Fastmail Checker to view details.';
+      : 'Open Fastmail Unread Notifier to view details.';
 
     await browser.notifications.create(`fastmail-${email.id}-${Date.now()}`, {
       type: 'basic',

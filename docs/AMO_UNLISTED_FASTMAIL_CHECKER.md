@@ -1,15 +1,16 @@
-# AMO Unlisted Preparation: Fastmail Checker
+# AMO Unlisted Preparation: Fastmail Unread Notifier
 
-This note tracks the Firefox AMO Unlisted submission package for Fastmail Checker.
+This note tracks the Firefox AMO Unlisted submission package for Fastmail Unread Notifier.
 
 ## Version
 
 - Extension: `fastmail-checker-firefox`
-- Version: `1.0.1`
-- Add-on ID: `fastmail-checker@hiroyajinbo.github.io`
-- Tag: `fastmail-checker-firefox-v1.0.1`
-- Upload ZIP: `dist/fastmail-checker-firefox-1.0.1.zip`
-- Do not upload the older `1.0.0` ZIP/tag. It was created before AMO data collection manifest fields were added.
+- AMO name: `Fastmail Unread Notifier`
+- Version: `1.0.2`
+- Add-on ID: `fastmail-unread-notifier@hiroyajinbo.github.io`
+- Tag: `fastmail-checker-firefox-v1.0.2`
+- Upload ZIP: `dist/fastmail-checker-firefox-1.0.2.zip`
+- Do not upload the older `1.0.0` or `1.0.1` ZIP/tag. They were created before the final AMO naming and data collection manifest updates.
 
 ## Package Contents
 

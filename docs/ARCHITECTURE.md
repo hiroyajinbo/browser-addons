@@ -26,7 +26,7 @@ browser-addons/
 
 拡張機能によって、存在しないファイルやディレクトリがあります。
 
-## Fastmail Checker
+## Fastmail Unread Notifier
 
 Fastmail APIを利用して、未読メール確認、通知、メール本文表示、既読化を行います。
 
