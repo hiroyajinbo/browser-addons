@@ -243,8 +243,15 @@ function sanitizeEmailHtml(html, { loadExternalImages = false } = {}) {
     'script',
     'style',
     'iframe',
+    'frame',
+    'frameset',
     'object',
     'embed',
+    'applet',
+    'video',
+    'audio',
+    'source',
+    'picture',
     'form',
     'input',
     'button',
@@ -270,6 +277,11 @@ function sanitizeEmailHtml(html, { loadExternalImages = false } = {}) {
       const value = attr.value;
 
       if (name.startsWith('on')) {
+        el.removeAttribute(attr.name);
+        continue;
+      }
+
+      if (name === 'srcset') {
         el.removeAttribute(attr.name);
         continue;
       }

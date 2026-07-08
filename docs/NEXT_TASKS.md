@@ -10,8 +10,8 @@ Last updated: 2026-07-09
 
 ## Next
 
-- Prepare AMO Unlisted ZIP for Fastmail Checker.
-- Create release tag for `fastmail-checker-firefox` `1.0.0`.
+- Prepare AMO Unlisted ZIP for Fastmail Checker `1.0.1`.
+- Create release tag for `fastmail-checker-firefox` `1.0.1`.
 - Upload ZIP to AMO as Unlisted and download the signed XPI.
 - Install the signed XPI locally and confirm settings persist.
 
