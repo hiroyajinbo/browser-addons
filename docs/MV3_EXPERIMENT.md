@@ -9,6 +9,7 @@
 - `browser_action` を `action` に変更
 - `https://api.fastmail.com/*` を `host_permissions` に分離
 - Firefox向け設定を `applications` から `browser_specific_settings` に変更
+- Firefoxのアドオンマネージャに設定タブを表示するため `options_ui.open_in_tab` は `false` を維持
 - `background.js` / `popup.js` / `options.js` に `browser` / `chrome` の薄い互換参照を追加
 - ツールバーAPIを `browser.action` 優先に変更
 
