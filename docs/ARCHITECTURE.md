@@ -66,6 +66,6 @@ Fastmail系とは独立しており、必要に応じてcontent scriptやpopup U
 ## 今後の設計方針
 
 - 共通化できる処理は `shared/` へ切り出すことを検討する
-- Manifest V3対応を見据えて、background scriptの永続状態依存を減らす
+- Firefox向けManifest V3試作を進めつつ、background scriptの永続状態依存を減らす
 - HTMLメール表示、外部画像表示、APIトークン管理は安全側に倒す
 - Firefox、Chrome、Edgeの差分を吸収できる構成を検討する

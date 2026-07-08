@@ -88,11 +88,17 @@
 - 公式ロゴの丸コピーを避ける
 - サポート方針を明記する
 
-## 今後追加したい対策
+## 実装済みの対策
 
 - 外部画像表示のON/OFF
 - HTMLメール表示のON/OFF
 - APIトークンの接続テスト
+- 本文表示領域のスクロール制御
+- 通知対象フォルダと表示対象メールの分離
+- Manifest V3対応の試作
+
+## 今後追加したい対策
+
 - APIトークン削除ボタンの明確化
-- Manifest V3対応
 - Firefox、Chrome、Edge差分の整理
+- Manifest V3のChrome/Edge向けmanifest分岐

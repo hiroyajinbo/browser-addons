@@ -20,13 +20,16 @@
 - `options.js` の構文チェック
 - `manifest.json` のJSON parse
 - `browserAction` などManifest V2固有参照が残っていないこと
+- Firefoxでの実読み込み
+- Firefoxのオプションタブ表示
+- Firefoxでの通知対象フォルダ別バッジ表示
+- 通知・表示、通知対象フォルダの自動保存
 
 ## 未確認
 
-- Firefoxでの実読み込み
 - Chrome/Edgeでの実読み込み
 - Chrome/Edge向けに `background.service_worker` を使う別manifestまたはビルド分岐
-- 通知クリック、バッジ、アイコン切り替え
+- 通知クリック、アイコン切り替え
 - API token保存後の初回チェック
 
 ## 注意
