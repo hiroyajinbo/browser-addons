@@ -1,5 +1,6 @@
 'use strict';
 
+const browser = globalThis.browser || globalThis.chrome;
 const $ = (selector) => document.querySelector(selector);
 
 const tokenEl = $('#token');

@@ -1,5 +1,7 @@
 'use strict';
 
+const browser = globalThis.browser || globalThis.chrome;
+const actionApi = browser.action || browser.browserAction;
 const FASTMAIL_SESSION_URL = 'https://api.fastmail.com/jmap/session';
 const JMAP_CORE = 'urn:ietf:params:jmap:core';
 const JMAP_MAIL = 'urn:ietf:params:jmap:mail';
@@ -414,20 +416,20 @@ async function fetchUnreadEmails(settings, mailboxes, enabledMailboxIds) {
 
 async function updateBadge(count, errorText = '') {
   if (errorText) {
-    await browser.browserAction.setBadgeText({ text: '!' });
-    await browser.browserAction.setBadgeBackgroundColor({ color: '#a40000' });
+    await actionApi.setBadgeText({ text: '!' });
+    await actionApi.setBadgeBackgroundColor({ color: '#a40000' });
     await setActionIcon('color');
     return;
   }
 
   const text = count > 999 ? '999+' : count > 0 ? String(count) : '';
-  await browser.browserAction.setBadgeText({ text });
-  await browser.browserAction.setBadgeBackgroundColor({ color: '#1688d9' });
+  await actionApi.setBadgeText({ text });
+  await actionApi.setBadgeBackgroundColor({ color: '#1688d9' });
   await setActionIcon(count > 0 ? 'color' : 'gray');
 }
 
 async function setActionIcon(mode) {
-  await browser.browserAction.setIcon({
+  await actionApi.setIcon({
     path: mode === 'gray' ? ICON_GRAY_PATHS : ICON_COLOR_PATHS
   });
 }

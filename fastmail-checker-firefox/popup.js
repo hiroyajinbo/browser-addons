@@ -1,5 +1,6 @@
 'use strict';
 
+const browser = globalThis.browser || globalThis.chrome;
 const state = {
   emails: [],
   mailboxes: [],
