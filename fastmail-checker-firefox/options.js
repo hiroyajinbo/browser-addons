@@ -7,6 +7,8 @@ const intervalEl = $('#interval');
 const fetchLimitEl = $('#fetch-limit');
 const detailedNotificationsEl = $('#detailed-notifications');
 const markReadEnabledEl = $('#mark-read-enabled');
+const renderHtmlEnabledEl = $('#render-html-enabled');
+const loadExternalImagesEl = $('#load-external-images');
 const mailboxesEl = $('#mailboxes');
 const statusEl = $('#status');
 
@@ -78,6 +80,8 @@ async function loadOptions() {
   fetchLimitEl.value = data.fetchLimit || 30;
   detailedNotificationsEl.checked = Boolean(data.showDetailedNotifications);
   markReadEnabledEl.checked = Boolean(data.markReadEnabled);
+  renderHtmlEnabledEl.checked = data.renderHtmlEnabled !== false;
+  loadExternalImagesEl.checked = Boolean(data.loadExternalImages);
   mailboxes = data.mailboxes || [];
   enabledMailboxIds = new Set(data.enabledMailboxIds || []);
   renderMailboxes();
@@ -96,6 +100,8 @@ function collectOptions() {
     fetchLimit: fetchLimitEl.value,
     showDetailedNotifications: detailedNotificationsEl.checked,
     markReadEnabled: markReadEnabledEl.checked,
+    renderHtmlEnabled: renderHtmlEnabledEl.checked,
+    loadExternalImages: loadExternalImagesEl.checked,
     enabledMailboxIds: [...enabledMailboxIds]
   };
 }

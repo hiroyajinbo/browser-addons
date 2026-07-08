@@ -4,6 +4,8 @@ const state = {
   emails: [],
   mailboxes: [],
   markReadEnabled: true,
+  renderHtmlEnabled: true,
+  loadExternalImages: false,
   emailBodies: new Map(),
   openEmailIds: new Set()
 };
@@ -15,6 +17,8 @@ const statusEl = $('#status');
 const mailboxFilterEl = $('#mailbox-filter');
 const textFilterEl = $('#text-filter');
 const markVisibleReadEl = $('#mark-visible-read');
+const setupTokenEl = $('#setup-token');
+const saveSetupTokenEl = $('#save-setup-token');
 const POPUP_VIEW_KEY = 'popupViewState';
 
 function formatDate(value) {
@@ -232,7 +236,7 @@ function improvePlainHtmlText(root, doc) {
   }
 }
 
-function sanitizeEmailHtml(html) {
+function sanitizeEmailHtml(html, { loadExternalImages = false } = {}) {
   const doc = new DOMParser().parseFromString(String(html || ''), 'text/html');
   const blockedTags = new Set([
     'script',
@@ -283,7 +287,8 @@ function sanitizeEmailHtml(html) {
 
       if (name === 'src') {
         const src = normalizeSafeUrl(value, ['http:', 'https:', 'data:']);
-        if (tagName === 'img' && src) {
+        const isExternalImage = src.startsWith('http://') || src.startsWith('https://');
+        if (tagName === 'img' && src && (loadExternalImages || !isExternalImage)) {
           el.setAttribute('src', src);
           el.setAttribute('loading', 'lazy');
           el.setAttribute('referrerpolicy', 'no-referrer');
@@ -337,7 +342,9 @@ function sanitizeEmailHtml(html) {
 }
 
 function renderEmailBody(bodyEl, message) {
-  const html = message?.html ? sanitizeEmailHtml(message.html) : '';
+  const html = state.renderHtmlEnabled && message?.html
+    ? sanitizeEmailHtml(message.html, { loadExternalImages: state.loadExternalImages })
+    : '';
   if (html) {
     bodyEl.classList.add('html-body');
     bodyEl.innerHTML = html;
@@ -520,6 +527,8 @@ async function loadState(runCheck = false) {
   state.emails = popupState.emails || [];
   state.mailboxes = popupState.mailboxes || [];
   state.markReadEnabled = Boolean(popupState.markReadEnabled);
+  state.renderHtmlEnabled = popupState.renderHtmlEnabled !== false;
+  state.loadExternalImages = Boolean(popupState.loadExternalImages);
 
   $('#setup').classList.toggle('hidden', popupState.hasToken);
   $('#controls').classList.toggle('hidden', !popupState.hasToken);
@@ -546,6 +555,36 @@ $('#check-now').addEventListener('click', () => loadState(true).catch((error) =>
 $('#open-fastmail').addEventListener('click', () => browser.runtime.sendMessage({ type: 'openFastmail' }));
 $('#options').addEventListener('click', () => browser.runtime.sendMessage({ type: 'openOptions' }));
 $('#open-options-setup').addEventListener('click', () => browser.runtime.sendMessage({ type: 'openOptions' }));
+saveSetupTokenEl.addEventListener('click', async () => {
+  const token = setupTokenEl.value.trim();
+  if (!token) {
+    setStatus('API tokenを入力してください');
+    return;
+  }
+
+  saveSetupTokenEl.disabled = true;
+  setStatus('保存して初回チェック中...');
+  try {
+    await browser.runtime.sendMessage({
+      type: 'saveOptions',
+      options: {
+        token,
+        checkIntervalMinutes: 5,
+        fetchLimit: 30,
+        showDetailedNotifications: true,
+        markReadEnabled: true,
+        renderHtmlEnabled: true,
+        loadExternalImages: false
+      }
+    });
+    setupTokenEl.value = '';
+    await loadState(true);
+  } catch (error) {
+    setStatus(`セットアップに失敗: ${error.message || error}`);
+  } finally {
+    saveSetupTokenEl.disabled = false;
+  }
+});
 textFilterEl.addEventListener('input', () => {
   renderEmails();
   savePopupViewState().catch((error) => setStatus(`表示状態の保存に失敗: ${error.message || error}`));

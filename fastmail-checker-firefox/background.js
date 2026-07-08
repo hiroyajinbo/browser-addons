@@ -22,6 +22,8 @@ const DEFAULT_SETTINGS = {
   fetchLimit: 30,
   showDetailedNotifications: true,
   markReadEnabled: true,
+  renderHtmlEnabled: true,
+  loadExternalImages: false,
   enabledMailboxIds: [],
   knownUnreadEmailIds: [],
   initialized: false,
@@ -554,7 +556,9 @@ async function getPopupState() {
     mailboxes: settings.mailboxes || [],
     enabledMailboxIds: settings.enabledMailboxIds || [],
     hasToken: Boolean(settings.token),
-    markReadEnabled: Boolean(settings.markReadEnabled)
+    markReadEnabled: Boolean(settings.markReadEnabled),
+    renderHtmlEnabled: Boolean(settings.renderHtmlEnabled),
+    loadExternalImages: Boolean(settings.loadExternalImages)
   };
 }
 
@@ -566,6 +570,8 @@ async function getOptionsData() {
     fetchLimit: settings.fetchLimit,
     showDetailedNotifications: settings.showDetailedNotifications,
     markReadEnabled: settings.markReadEnabled,
+    renderHtmlEnabled: settings.renderHtmlEnabled,
+    loadExternalImages: settings.loadExternalImages,
     mailboxes: settings.mailboxes || [],
     enabledMailboxIds: settings.enabledMailboxIds || [],
     lastError: settings.lastError,
@@ -628,6 +634,8 @@ browser.runtime.onMessage.addListener((message) => {
           fetchLimit: clampNumber(options.fetchLimit, 5, 100, DEFAULT_SETTINGS.fetchLimit),
           showDetailedNotifications: Boolean(options.showDetailedNotifications),
           markReadEnabled: Boolean(options.markReadEnabled),
+          renderHtmlEnabled: options.renderHtmlEnabled !== false,
+          loadExternalImages: Boolean(options.loadExternalImages),
           enabledMailboxIds: Array.isArray(options.enabledMailboxIds) ? options.enabledMailboxIds : current.enabledMailboxIds
         };
 

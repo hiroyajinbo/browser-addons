@@ -16,8 +16,21 @@
   </header>
 
   <section id="setup" class="hidden panel">
-    <p>Fastmail APIトークンが未設定です。</p>
-    <button id="open-options-setup" type="button">設定を開く</button>
+    <h2>初期セットアップ</h2>
+    <p>Fastmail API tokenを入力して、未読メールの確認を開始します。</p>
+    <ol class="setup-steps">
+      <li>Fastmailの設定でAPI tokenを作成します。</li>
+      <li>Mailへのアクセス権限を持つtokenを入力します。</li>
+      <li>保存後、Inboxを対象に初回チェックします。</li>
+    </ol>
+    <label class="field">
+      <span>Fastmail API token</span>
+      <input id="setup-token" type="password" autocomplete="off" spellcheck="false" placeholder="API token">
+    </label>
+    <div class="row">
+      <button id="save-setup-token" type="button">保存して開始</button>
+      <button id="open-options-setup" type="button">詳細設定を開く</button>
+    </div>
   </section>
 
   <section id="controls" class="panel">
