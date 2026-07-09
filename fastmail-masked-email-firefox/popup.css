@@ -67,8 +67,14 @@ h1::before {
   border: 4px solid var(--brand-blue);
   border-radius: 50%;
   background:
-    linear-gradient(90deg, var(--brand-yellow) 0 44%, transparent 44%) 7px 8px / 14px 12px no-repeat,
-    linear-gradient(#fff, #fff) 8px 15px / 13px 4px no-repeat;
+    radial-gradient(ellipse at 34% 50%, var(--brand) 0 8%, transparent 9%) 0 0 / 100% 100% no-repeat,
+    radial-gradient(ellipse at 66% 50%, var(--brand) 0 8%, transparent 9%) 0 0 / 100% 100% no-repeat,
+    radial-gradient(ellipse at 50% 56%, transparent 0 7%, #5c6b80 8% 10%, transparent 11%) 0 0 / 100% 100% no-repeat,
+    linear-gradient(90deg, var(--brand-yellow) 0 42%, var(--brand-dark) 42% 50%, transparent 50%) 0 0 / 100% 100% no-repeat,
+    #f8fbff;
+  background-clip: padding-box;
+  box-shadow: inset 0 0 0 2px #5c6b80;
+  clip-path: inset(7px 4px 8px round 8px);
 }
 
 h2 {
