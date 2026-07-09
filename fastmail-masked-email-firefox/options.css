@@ -38,7 +38,7 @@ body {
 }
 
 main {
-  max-width: 780px;
+  max-width: 900px;
   margin: 0 auto;
 }
 
@@ -56,7 +56,7 @@ h1 {
   align-items: center;
   gap: 12px;
   margin: 0 0 6px;
-  font-size: 24px;
+  font-size: 26px;
 }
 
 h1::before {
@@ -79,7 +79,7 @@ h1::before {
 
 h2 {
   margin: 0 0 10px;
-  font-size: 16px;
+  font-size: 18px;
 }
 
 .lead {
@@ -93,19 +93,23 @@ h2 {
 }
 
 .panel {
-  margin-top: 14px;
-  padding: 14px;
+  margin-top: 16px;
+  padding: 16px;
   border: 1px solid var(--line);
-  border-radius: 12px;
+  border-radius: 14px;
   background: var(--panel);
   box-shadow: 0 1px 3px rgba(17, 38, 67, 0.08);
+}
+
+.field {
+  display: block;
+  margin: 12px 0;
 }
 
 .field span {
   display: block;
   margin-bottom: 4px;
   color: var(--muted);
-  font-size: 12px;
 }
 
 input {

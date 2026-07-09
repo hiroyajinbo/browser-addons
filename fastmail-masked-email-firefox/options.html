@@ -11,7 +11,7 @@
     <header class="hero">
       <div>
         <h1>Fastmail Masked Email 設定</h1>
-        <p class="lead">API tokenとMasked Email capabilityを確認します。</p>
+        <p class="lead">API tokenと接続状態を設定します。</p>
       </div>
     </header>
 
@@ -21,18 +21,12 @@
         <span>Fastmail API token</span>
         <input id="token" type="password" autocomplete="off" spellcheck="false" placeholder="Masked Email権限を持つAPI token">
       </label>
-      <p class="hint">FastmailでJMAP API tokenを作成し、Masked Emailの権限を有効にしてください。必要以上の権限は付けないことを推奨します。</p>
+      <p class="hint">Masked Emailの作成には、Masked Email権限を持つFastmail API tokenが必要です。必要以上の権限は付けないことを推奨します。</p>
       <div class="row">
-        <button id="save-token" type="button" class="primary">保存して診断</button>
-        <button id="diagnose" type="button">再診断</button>
+        <button id="save-token" type="button" class="primary">保存</button>
+        <button id="diagnose" type="button">接続テスト</button>
       </div>
-      <p id="status" class="status" role="status" aria-live="polite"></p>
-    </section>
-
-    <section class="panel">
-      <h2>診断情報</h2>
-      <p class="hint">Masked Email capabilityが検出できない場合は、API tokenの権限を確認してください。</p>
-      <pre id="diagnostic"></pre>
+      <p id="status" class="status" role="status" aria-live="polite">読み込み中...</p>
     </section>
   </main>
 

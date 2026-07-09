@@ -4,7 +4,6 @@ const $ = (selector) => document.querySelector(selector);
 
 const tokenEl = $('#token');
 const statusEl = $('#status');
-const diagnosticEl = $('#diagnostic');
 const saveTokenEl = $('#save-token');
 const diagnoseEl = $('#diagnose');
 
@@ -18,37 +17,29 @@ function setBusy(isBusy) {
   diagnoseEl.disabled = isBusy;
 }
 
-function renderDiagnostic(state) {
-  diagnosticEl.textContent = JSON.stringify({
-    hasToken: state.hasToken,
-    maskedCapability: state.maskedCapability || '(not found)',
-    lastError: state.lastError || '',
-    session: state.lastSession || null
-  }, null, 2);
-}
-
 async function loadState() {
   const state = await browser.runtime.sendMessage({ type: 'getPopupState' });
-  renderDiagnostic(state);
 
   if (!state.hasToken) {
     setStatus('API tokenを保存してください');
   } else if (state.maskedCapability) {
-    setStatus(`Masked Email capabilityを検出しました: ${state.maskedCapability}`, 'ok');
+    setStatus('接続OK。Masked Emailを作成できます。', 'ok');
   } else if (state.lastError) {
     setStatus(`エラー: ${state.lastError}`, 'error');
   } else {
-    setStatus('Masked Email capabilityは未検出です。再診断してください。');
+    setStatus('接続テストを実行してください。');
   }
 }
 
 async function saveToken() {
   setBusy(true);
-  setStatus('保存・診断中...');
+  setStatus('保存中...');
   try {
     const result = await browser.runtime.sendMessage({ type: 'saveToken', token: tokenEl.value });
     if (!result.ok) {
-      setStatus(`診断エラー: ${result.error}`, 'error');
+      setStatus(`接続エラー: ${result.error}`, 'error');
+    } else {
+      setStatus('保存しました。', 'ok');
     }
     tokenEl.value = '';
     await loadState();
@@ -59,11 +50,13 @@ async function saveToken() {
 
 async function diagnose() {
   setBusy(true);
-  setStatus('診断中...');
+  setStatus('接続テスト中...');
   try {
     const result = await browser.runtime.sendMessage({ type: 'diagnose' });
     if (!result.ok) {
-      setStatus(`診断エラー: ${result.error}`, 'error');
+      setStatus(`接続エラー: ${result.error}`, 'error');
+    } else {
+      setStatus('接続OK。Masked Emailを作成できます。', 'ok');
     }
     await loadState();
   } finally {
