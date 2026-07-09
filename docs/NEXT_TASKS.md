@@ -6,22 +6,25 @@ Last updated: 2026-07-09
 
 - Branch: `main`
 - Firefox MV3 work has been merged into `main`.
-- Chrome/Edge manifest split is intentionally deferred until after the Firefox release flow.
+- Fastmail Unread Notifier `1.0.3` has been approved by AMO as an Unlisted add-on.
+- Signed XPI has been installed locally and core behavior has been smoke-tested.
+- GitHub Release has been published: https://github.com/hiroyajinbo/browser-addons/releases/tag/fastmail-checker-firefox-v1.0.3
+- Chrome/Edge manifest split is intentionally deferred until after several days of Firefox use.
 
 ## Next
 
-- Prepare AMO Unlisted ZIP for Fastmail Unread Notifier `1.0.3`.
-- Create release tag for `fastmail-checker-firefox` `1.0.3`.
-- Upload ZIP to AMO as Unlisted and download the signed XPI.
-- Install the signed XPI locally and confirm settings persist.
+- Use the signed Firefox XPI for several days in normal mail-checking workflow.
+- Confirm HTML email display ON/OFF with real HTML mail.
+- Confirm external image loading remains OFF by default with real HTML mail.
+- Record any issues found during daily use before planning `1.0.4`.
 
-## After Merge
+## Later
 
 - Decide whether to keep `docs/MV3_EXPERIMENT.md` as a historical note or convert it into a browser compatibility note.
-- Later: design Chrome/Edge manifest split for `background.service_worker`.
+- Design Chrome/Edge manifest split for `background.service_worker`.
 
 ## Known Remaining Manual Checks
 
-- AMO unlisted package contents before signing.
-- Signed XPI install from file.
-- Update flow from temporary/local install to signed XPI.
+- HTML email rendering with real messages.
+- External image loading OFF default with real messages.
+- Update flow from the signed XPI to a future signed version.

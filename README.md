@@ -13,9 +13,13 @@
 - `rakuten-kobo-sale`: 楽天Koboセール確認向けの補助拡張機能
 - `rakuten-top-cleaner`: 楽天トップページの表示調整用拡張機能
 
+## Releases
+
+- [Fastmail Unread Notifier v1.0.3](https://github.com/hiroyajinbo/browser-addons/releases/tag/fastmail-checker-firefox-v1.0.3)
+
 ## Notes
 
-このリポジトリは個人用途から始まった実験的なプロジェクトです。公開・配布に向けたドキュメント、プライバシーポリシー、セキュリティ方針を整備しながら、まずは自分用の常用と非公開配布で確認していきます。
+このリポジトリは個人用途から始まった実験的なプロジェクトです。公開・配布に向けたドキュメント、プライバシーポリシー、セキュリティ方針を整備しながら、自分用の常用と非公開配布を中心に確認していきます。
 
 ## Documents
 
