@@ -12,6 +12,12 @@ const diagnoseEl = $('#diagnose');
 
 let autoSaveTimer = 0;
 
+function clampNumber(value, { min, max, fallback }) {
+  const number = Number.parseInt(value, 10);
+  if (Number.isNaN(number)) return fallback;
+  return Math.min(max, Math.max(min, number));
+}
+
 function setStatus(text, kind = '') {
   statusEl.textContent = text;
   statusEl.className = `status ${kind}`.trim();
@@ -45,15 +51,22 @@ async function loadState() {
 
 async function saveHistoryOptions() {
   setHistoryStatus('保存中...');
+  const fallbackLimit = clampNumber(historyLimitEl.value, { min: 3, max: 20, fallback: 20 });
+  const fallbackMaxAgeDays = clampNumber(historyMaxAgeDaysEl.value, { min: 0, max: 365, fallback: 0 });
   const result = await browser.runtime.sendMessage({
     type: 'saveHistoryOptions',
     options: {
-      historyLimit: historyLimitEl.value,
-      historyMaxAgeDays: historyMaxAgeDaysEl.value
+      historyLimit: fallbackLimit,
+      historyMaxAgeDays: fallbackMaxAgeDays
     }
   });
-  historyLimitEl.value = result.historyLimit;
-  historyMaxAgeDaysEl.value = result.historyMaxAgeDays;
+
+  if (!result?.ok) {
+    throw new Error(result?.error || '履歴表示設定を保存できませんでした。拡張機能を再読み込みしてから再度お試しください。');
+  }
+
+  historyLimitEl.value = result.historyLimit ?? fallbackLimit;
+  historyMaxAgeDaysEl.value = result.historyMaxAgeDays ?? fallbackMaxAgeDays;
   setHistoryStatus('保存しました。', 'ok');
 }
 
