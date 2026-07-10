@@ -21,9 +21,9 @@ Masked Email は Fastmail 独自機能のため、設定画面に capability 診
 1. Firefox で `about:debugging#/runtime/this-firefox` を開きます。
 2. 「一時的なアドオンを読み込む」を押します。
 3. このフォルダ内の `manifest.json` を選択します。
-4. 拡張機能の設定画面を開きます。
-5. Fastmail API token を入力し、「保存して診断」を押します。
-6. ツールバーの `Fastmail Masked Email` を開いて作成します。
+4. ツールバーの `Fastmail Masked Email` を開きます。
+5. 初期セットアップに Fastmail API token を入力し、「保存して開始」を押します。
+6. 接続と Masked Email 権限の確認が完了したら作成します。履歴の保存件数などは「詳細設定」から変更できます。
 
 ## AMO Unlistedで署名して自己配布する手順
 

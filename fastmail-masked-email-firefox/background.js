@@ -4,7 +4,6 @@ const FASTMAIL_SESSION_URL = 'https://api.fastmail.com/jmap/session';
 const JMAP_CORE = 'urn:ietf:params:jmap:core';
 const JMAP_MAIL = 'urn:ietf:params:jmap:mail';
 const FASTMAIL_MASKED_EMAIL = 'https://www.fastmail.com/dev/maskedemail';
-const MASKED_CAPABILITY_HINTS = ['masked', 'mask'];
 
 const DEFAULT_SETTINGS = {
   token: '',
@@ -79,10 +78,7 @@ function findMaskedCapability(session, accountId) {
   const serverCapabilities = Object.keys(session.capabilities || {});
   const candidates = [...new Set([...accountCapabilities, ...serverCapabilities])];
 
-  return candidates.find((capability) => {
-    const lower = capability.toLowerCase();
-    return MASKED_CAPABILITY_HINTS.some((hint) => lower.includes(hint));
-  }) || '';
+  return candidates.includes(FASTMAIL_MASKED_EMAIL) ? FASTMAIL_MASKED_EMAIL : '';
 }
 
 function missingMaskedCapabilityMessage(session) {

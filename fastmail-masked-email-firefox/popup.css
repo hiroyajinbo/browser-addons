@@ -107,6 +107,16 @@ h2 {
   margin-top: 8px;
 }
 
+.setup-steps {
+  margin: 8px 0;
+  padding-left: 22px;
+  color: var(--muted);
+}
+
+.setup-steps li + li {
+  margin-top: 3px;
+}
+
 .field {
   display: block;
   margin-top: 8px;

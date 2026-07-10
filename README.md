@@ -1,5 +1,15 @@
 # Browser Add-ons
 
+## Project Location
+
+This project is managed under the shared development foundation:
+
+```text
+C:\Users\elega\Documents\CD開発フロー\projects\add-on
+```
+
+Run setup, test, packaging, and extension work from this directory.
+
 日常のWeb作業を補助する、個人開発のブラウザ拡張機能集です。
 
 このリポジトリには、メール確認、Masked Email作成補助、ECサイト向けの表示改善など、小さな用途に合わせたWebExtensionベースのツールを含みます。

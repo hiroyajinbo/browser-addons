@@ -17,11 +17,23 @@
 
   <section id="setup" class="panel hidden">
     <h2>初期セットアップ</h2>
-    <p>Fastmail Masked Email用のAPI tokenを設定してください。</p>
-    <button id="open-options-setup" type="button">設定を開く</button>
+    <p>Fastmail API tokenを入力して、Masked Emailの作成を開始します。</p>
+    <ol class="setup-steps">
+      <li>Fastmailの設定でAPI tokenを作成します。</li>
+      <li>Masked Email権限を持つtokenを入力します。</li>
+      <li>保存後、接続と権限を自動で確認します。</li>
+    </ol>
+    <label class="field">
+      <span>Fastmail API token</span>
+      <input id="setup-token" type="password" autocomplete="off" spellcheck="false" placeholder="API token">
+    </label>
+    <div class="row">
+      <button id="save-setup-token" type="button">保存して開始</button>
+      <button id="open-options-setup" type="button">詳細設定を開く</button>
+    </div>
   </section>
 
-  <section id="creator" class="panel">
+  <section id="creator" class="panel hidden">
     <label class="field">
       <span>用途名</span>
       <input id="description" type="text" placeholder="例: example.com 登録用">
@@ -43,7 +55,7 @@
     <button id="copy-created" type="button">再コピー</button>
   </section>
 
-  <section class="panel">
+  <section id="history-panel" class="panel hidden">
     <h2>最近作成したアドレス</h2>
     <p id="history-summary" class="history-summary"></p>
     <div id="history" class="history"></div>

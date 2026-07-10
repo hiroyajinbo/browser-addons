@@ -14,6 +14,9 @@ const creatorEl = $('#creator');
 const resultEl = $('#result');
 const createdEmailEl = $('#created-email');
 const copyCreatedEl = $('#copy-created');
+const historyPanelEl = $('#history-panel');
+const setupTokenEl = $('#setup-token');
+const saveSetupTokenEl = $('#save-setup-token');
 
 let lastCreatedEmail = '';
 
@@ -102,6 +105,8 @@ async function loadState() {
   const isReady = Boolean(state.hasToken && state.maskedCapability);
   setupEl.classList.toggle('hidden', isReady);
   creatorEl.classList.toggle('hidden', !isReady);
+  historyPanelEl.classList.toggle('hidden', !isReady);
+  if (!isReady) resultEl.classList.add('hidden');
   createEl.disabled = !isReady;
 
   if (!state.hasToken) {
@@ -111,7 +116,7 @@ async function loadState() {
   } else if (state.lastError) {
     setStatus(`エラー: ${state.lastError}`, 'error');
   } else {
-    setStatus('設定画面で接続テストしてください');
+    setStatus('API tokenを入力して接続を確認してください');
   }
 }
 
@@ -171,6 +176,29 @@ domainEl.addEventListener('blur', () => {
 
 $('#options').addEventListener('click', () => browser.runtime.sendMessage({ type: 'openOptions' }));
 $('#open-options-setup').addEventListener('click', () => browser.runtime.sendMessage({ type: 'openOptions' }));
+saveSetupTokenEl.addEventListener('click', async () => {
+  const token = setupTokenEl.value.trim();
+  if (!token) {
+    setStatus('API tokenを入力してください');
+    return;
+  }
+
+  saveSetupTokenEl.disabled = true;
+  setStatus('保存して接続確認中...');
+  try {
+    const result = await browser.runtime.sendMessage({ type: 'saveToken', token });
+    if (!result?.ok) {
+      await loadState();
+      return;
+    }
+    setupTokenEl.value = '';
+    await loadState();
+  } catch (error) {
+    setStatus(`セットアップに失敗: ${error.message || error}`, 'error');
+  } finally {
+    saveSetupTokenEl.disabled = false;
+  }
+});
 copyCreatedEl.addEventListener('click', async () => {
   if (!lastCreatedEmail) return;
   await navigator.clipboard.writeText(lastCreatedEmail);
