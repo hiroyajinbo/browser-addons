@@ -307,8 +307,10 @@ function sanitizeEmailHtml(html, { loadExternalImages = false } = {}) {
           el.setAttribute('referrerpolicy', 'no-referrer');
         } else {
           el.removeAttribute(attr.name);
-          if (tagName === 'img' && !el.getAttribute('alt')) {
-            el.setAttribute('alt', '[embedded image]');
+          if (tagName === 'img') {
+            el.setAttribute('alt', '');
+            el.setAttribute('title', isExternalImage ? 'External image blocked' : 'Embedded image unavailable');
+            el.setAttribute('role', 'presentation');
           }
         }
         continue;
