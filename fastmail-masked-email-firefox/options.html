@@ -28,6 +28,20 @@
       </div>
       <p id="status" class="status" role="status" aria-live="polite">読み込み中...</p>
     </section>
+
+    <section class="panel">
+      <h2>最近作成したアドレス</h2>
+      <label class="field inline">
+        <span>表示上限（件）</span>
+        <input id="history-limit" type="number" min="3" max="20" step="1">
+      </label>
+      <label class="field inline">
+        <span>表示期間（日）</span>
+        <input id="history-max-age-days" type="number" min="0" max="365" step="1">
+      </label>
+      <p class="hint">表示上限は3〜20件です。表示期間は0にすると日数では絞り込みません。</p>
+      <p id="history-status" class="section-status">変更すると自動保存されます。</p>
+    </section>
   </main>
 
   <script src="options.js"></script>

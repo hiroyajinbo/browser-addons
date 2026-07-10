@@ -6,6 +6,7 @@ const statusEl = $('#status');
 const descriptionEl = $('#description');
 const urlEl = $('#url');
 const domainEl = $('#domain');
+const historySummaryEl = $('#history-summary');
 const historyEl = $('#history');
 const createEl = $('#create');
 const setupEl = $('#setup');
@@ -85,8 +86,17 @@ function renderHistory(history) {
   }
 }
 
+function renderHistorySummary(state) {
+  const limit = state.historyLimit || 20;
+  const maxAgeDays = state.historyMaxAgeDays || 0;
+  historySummaryEl.textContent = maxAgeDays > 0
+    ? `直近${maxAgeDays}日以内 / 最大${limit}件`
+    : `最大${limit}件`;
+}
+
 async function loadState() {
   const state = await browser.runtime.sendMessage({ type: 'getPopupState' });
+  renderHistorySummary(state);
   renderHistory(state.history || []);
 
   const isReady = Boolean(state.hasToken && state.maskedCapability);
@@ -101,7 +111,7 @@ async function loadState() {
   } else if (state.lastError) {
     setStatus(`エラー: ${state.lastError}`, 'error');
   } else {
-    setStatus('設定画面で診断してください');
+    setStatus('設定画面で接続テストしてください');
   }
 }
 

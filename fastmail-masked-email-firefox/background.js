@@ -13,7 +13,9 @@ const DEFAULT_SETTINGS = {
   maskedCapability: '',
   lastSession: null,
   lastError: '',
-  history: []
+  history: [],
+  historyLimit: 20,
+  historyMaxAgeDays: 0
 };
 
 async function getSettings() {
@@ -22,6 +24,30 @@ async function getSettings() {
 
 async function saveSettings(patch) {
   await browser.storage.local.set(patch);
+}
+
+function clampNumber(value, { min, max, fallback }) {
+  const number = Number.parseInt(value, 10);
+  if (Number.isNaN(number)) return fallback;
+  return Math.min(max, Math.max(min, number));
+}
+
+function normalizeHistoryLimit(value) {
+  return clampNumber(value, { min: 3, max: 20, fallback: DEFAULT_SETTINGS.historyLimit });
+}
+
+function normalizeHistoryMaxAgeDays(value) {
+  return clampNumber(value, { min: 0, max: 365, fallback: DEFAULT_SETTINGS.historyMaxAgeDays });
+}
+
+function filterHistory(history, settings) {
+  const limit = normalizeHistoryLimit(settings.historyLimit);
+  const maxAgeDays = normalizeHistoryMaxAgeDays(settings.historyMaxAgeDays);
+  const cutoff = maxAgeDays > 0 ? Date.now() - (maxAgeDays * 24 * 60 * 60 * 1000) : 0;
+
+  return (history || [])
+    .filter((item) => !cutoff || Number(item.createdAt || 0) >= cutoff)
+    .slice(0, limit);
 }
 
 function normalizeApiUrl(apiUrl, accountId) {
@@ -302,7 +328,7 @@ async function createMaskedEmail(input) {
         url: input.url || '',
         createdAt: Date.now()
       };
-      const history = [historyItem, ...(settings.history || [])].slice(0, 20);
+      const history = filterHistory([historyItem, ...(settings.history || [])], settings);
       await saveSettings({ history, lastError: '' });
       return { ok: true, maskedEmail: created, history };
     }
@@ -315,12 +341,15 @@ async function createMaskedEmail(input) {
 
 async function getPopupState() {
   const settings = await getSettings();
+  const history = filterHistory(settings.history || [], settings);
   return {
     hasToken: Boolean(settings.token),
     maskedCapability: settings.maskedCapability,
     lastSession: settings.lastSession,
     lastError: settings.lastError,
-    history: settings.history || []
+    history,
+    historyLimit: normalizeHistoryLimit(settings.historyLimit),
+    historyMaxAgeDays: normalizeHistoryMaxAgeDays(settings.historyMaxAgeDays)
   };
 }
 
@@ -349,6 +378,15 @@ async function saveToken(token) {
   return { ok: true };
 }
 
+async function saveHistoryOptions(options = {}) {
+  const settings = await getSettings();
+  const historyLimit = normalizeHistoryLimit(options.historyLimit);
+  const historyMaxAgeDays = normalizeHistoryMaxAgeDays(options.historyMaxAgeDays);
+  const history = filterHistory(settings.history || [], { historyLimit, historyMaxAgeDays });
+  await saveSettings({ historyLimit, historyMaxAgeDays, history });
+  return { ok: true, historyLimit, historyMaxAgeDays, history };
+}
+
 browser.runtime.onMessage.addListener((message) => {
   switch (message?.type) {
     case 'getPopupState':
@@ -359,6 +397,8 @@ browser.runtime.onMessage.addListener((message) => {
       return openOptions();
     case 'diagnose':
       return diagnose();
+    case 'saveHistoryOptions':
+      return saveHistoryOptions(message.options);
     case 'createMaskedEmail':
       return createMaskedEmail(message.input || {}).catch(async (error) => {
         const messageText = error.message || String(error);

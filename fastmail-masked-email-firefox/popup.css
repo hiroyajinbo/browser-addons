@@ -188,6 +188,12 @@ pre {
   gap: 6px;
 }
 
+.history-summary {
+  margin: -2px 0 8px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
 .result {
   border-color: var(--brand-yellow);
   background: var(--soft-yellow);

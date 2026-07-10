@@ -3,13 +3,23 @@
 const $ = (selector) => document.querySelector(selector);
 
 const tokenEl = $('#token');
+const historyLimitEl = $('#history-limit');
+const historyMaxAgeDaysEl = $('#history-max-age-days');
 const statusEl = $('#status');
+const historyStatusEl = $('#history-status');
 const saveTokenEl = $('#save-token');
 const diagnoseEl = $('#diagnose');
+
+let autoSaveTimer = 0;
 
 function setStatus(text, kind = '') {
   statusEl.textContent = text;
   statusEl.className = `status ${kind}`.trim();
+}
+
+function setHistoryStatus(text, kind = '') {
+  historyStatusEl.textContent = text;
+  historyStatusEl.className = `section-status ${kind}`.trim();
 }
 
 function setBusy(isBusy) {
@@ -19,6 +29,8 @@ function setBusy(isBusy) {
 
 async function loadState() {
   const state = await browser.runtime.sendMessage({ type: 'getPopupState' });
+  historyLimitEl.value = state.historyLimit || 20;
+  historyMaxAgeDaysEl.value = state.historyMaxAgeDays || 0;
 
   if (!state.hasToken) {
     setStatus('API tokenを保存してください');
@@ -29,6 +41,28 @@ async function loadState() {
   } else {
     setStatus('接続テストを実行してください。');
   }
+}
+
+async function saveHistoryOptions() {
+  setHistoryStatus('保存中...');
+  const result = await browser.runtime.sendMessage({
+    type: 'saveHistoryOptions',
+    options: {
+      historyLimit: historyLimitEl.value,
+      historyMaxAgeDays: historyMaxAgeDaysEl.value
+    }
+  });
+  historyLimitEl.value = result.historyLimit;
+  historyMaxAgeDaysEl.value = result.historyMaxAgeDays;
+  setHistoryStatus('保存しました。', 'ok');
+}
+
+function scheduleHistoryAutoSave() {
+  clearTimeout(autoSaveTimer);
+  setHistoryStatus('保存待ち...');
+  autoSaveTimer = setTimeout(() => {
+    saveHistoryOptions().catch((error) => setHistoryStatus(error.message || String(error), 'error'));
+  }, 500);
 }
 
 async function saveToken() {
@@ -66,5 +100,7 @@ async function diagnose() {
 
 saveTokenEl.addEventListener('click', () => saveToken().catch((error) => setStatus(error.message || String(error), 'error')));
 diagnoseEl.addEventListener('click', () => diagnose().catch((error) => setStatus(error.message || String(error), 'error')));
+historyLimitEl.addEventListener('change', scheduleHistoryAutoSave);
+historyMaxAgeDaysEl.addEventListener('change', scheduleHistoryAutoSave);
 
 loadState().catch((error) => setStatus(error.message || String(error), 'error'));
